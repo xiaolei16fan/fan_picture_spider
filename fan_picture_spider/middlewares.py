@@ -13,13 +13,14 @@ from time import sleep
 import re
 
 global driver
-service_args = []
-service_args.append('--load-images=no')
-service_args.append('--disk-cache=yes')
-service_args.append('--ignore-ssl-errors=true')
-driver = webdriver.PhantomJS(service_args=service_args)
-driver.implicitly_wait(10) # 超时时间为10s
-driver.set_page_load_timeout(10)
+# service_args = []
+# service_args.append('--load-images=no')
+# service_args.append('--disk-cache=yes')
+# service_args.append('--ignore-ssl-errors=true')
+# service_args=service_args
+driver = webdriver.Firefox()
+#driver.implicitly_wait(15) # 超时时间为10s
+#driver.set_page_load_timeout(15)
 
 
 class FanPictureSpiderSpiderMiddleware(object):
