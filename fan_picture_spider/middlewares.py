@@ -82,12 +82,31 @@ class JavaScriptMiddleware(object):
         try:
             click_element = '//div[@class="entry_cta_wrap"]'
             driver.find_element_by_xpath(click_element).click()
-            sleep(3)
+            sleep(1)
         except:
-            spider.logger.debug('cannot open the click element refere page.')
+            spider.logger.info('cannot open the click element refere page. url: {}'
+                                .format(request.url))
 
         body = driver.page_source
        
         return HtmlResponse(driver.current_url, body=body, encoding='utf-8',
                             request=request)
+
+class SaveErrorsMiddleware(object):
+    def __init__(self, crawler):
+        crawler.signals.connect(self.close_spider, signals.spider_closed)
+        crawler.signals.connect(self.open_spider, signals.spider_opened)
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler)
+
+    def open_spider(self, spider):
+        self.output_file = open('crawler_error.log', 'a+b')
+
+    def close_spider(self, spider):
+        self.output_file.close()
+
+    def process_spider_exception(self, response, exception, spider):
+        self.output_file.write(response.url + '\n')
 
