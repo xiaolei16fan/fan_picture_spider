@@ -11,28 +11,37 @@ import scrapy
 class FanPictureSpiderItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    picture_url = scrapy.Field()
-    attraction_id = scrapy.Field()
-    group_id = scrapy.Field()
-    attraction_url = scrapy.Field()
+    pass
 
 class AttractionItem(scrapy.Item):
-    url = scrapy.Field()
-    picture_url = scrapy.Field()
-    group_id = scrapy.Field()
     id = scrapy.Field()
+    url = scrapy.Field()
+    pic_url = scrapy.Field()
+    group_id = scrapy.Field()
     updated_pic_url = scrapy.Field()
+    pic_width = scrapy.Field()
+    pic_height = scrapy.Field()
+    pic_size = scrapy.Field()
+    time = scrapy.Field()
 
 class RestrantItem(scrapy.Item):
-    url = scrapy.Field()
-    picture_url = scrapy.Field()
-    group_id = scrapy.Field()
     id = scrapy.Field()
+    url = scrapy.Field()
+    pic_url = scrapy.Field()
+    group_id = scrapy.Field()
     updated_pic_url = scrapy.Field()
+    pic_width = scrapy.Field()
+    pic_height = scrapy.Field()
+    pic_size = scrapy.Field()
+    time = scrapy.Field()
 
 class ShoppingItem(scrapy.Item):
-    url = scrapy.Field()
-    picture_url = scrapy.Field()
-    group_id = scrapy.Field()
     id = scrapy.Field()
+    url = scrapy.Field()
+    pic_url = scrapy.Field()
+    group_id = scrapy.Field()
     updated_pic_url = scrapy.Field()
+    pic_width = scrapy.Field()
+    pic_height = scrapy.Field()
+    pic_size = scrapy.Field()
+    time = scrapy.Field()

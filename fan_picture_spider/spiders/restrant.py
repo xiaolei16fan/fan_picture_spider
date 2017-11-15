@@ -41,5 +41,5 @@ class Restrant(scrapy.Spider):
             loader.add_value('group_id', re.findall(r'-*g(\d+)-',
                             restrant_url)[0])
             loader.add_value('url', restrant_url)
-            loader.add_value('picture_url', picture.extract())
+            loader.add_value('pic_url', picture.extract())
             yield loader.load_item()

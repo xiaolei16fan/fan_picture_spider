@@ -34,12 +34,12 @@ class Attraction(scrapy.Spider):
         pictures = response.selector.css('div[data-bigurl]::attr(data-bigurl)')
         attraction_url = response.request.url
         picture_count = self.settings.get('PICTURE_COUNT')
-
+ 
         for picture in pictures[:picture_count]:
             loader = ItemLoader(item=AttractionItem(), response=response)
             loader.add_value('id', re.findall(r'-*d(\d+)-', attraction_url)[0])
             loader.add_value('group_id', re.findall(r'-*g(\d+)-',
                             attraction_url)[0])
             loader.add_value('url', attraction_url)
-            loader.add_value('picture_url', picture.extract())
+            loader.add_value('pic_url', picture.extract())
             yield loader.load_item()
