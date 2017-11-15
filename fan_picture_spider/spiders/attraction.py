@@ -13,12 +13,20 @@ class Attraction(scrapy.Spider):
     attraction = 0
 
     start_urls = [
-        'https://www.tripadvisor.cn/Attractions-g294197-Activities-Seoul.html'
+        'https://www.tripadvisor.cn/Attractions-g294197-Activities-Seoul.html', #首尔
+        'https://www.tripadvisor.cn/Attractions-g297884-Activities-Busan.html', #釜山
+        'https://www.tripadvisor.cn/Attractions-g983296-Activities-Jeju_Island.html', #济州岛
+        'https://www.tripadvisor.cn/Attractions-g297889-Activities-Incheon.html', #仁川
+        'https://www.tripadvisor.cn/Attractions-g1072105-Activities-Gangwon_do.html', #江原道
+        'https://www.tripadvisor.cn/Attractions-g608520-Activities-Chuncheon_Gangwon_do.html', #春川市
+        'https://www.tripadvisor.cn/Attractions-g1074139-Activities-Samcheok_Gangwon_do.html', #三陟市
+        'https://www.tripadvisor.cn/Attractions-g317126-Activities-Gangneung_Gangwon_do.html', #江陵市
+        'https://www.tripadvisor.cn/Attractions-g317129-Activities-Sokcho_Gangwon_do.html', #束草市
     ]
 
     # 获取景点列表
     def parse(self, response):
-        list_ = response.xpath('//div[@id="FILTERED_LIST"]')
+        list_ = response.xpath('//div[@id="FILTERED_LIST"]') # TODO:异常处理
         url_list = list_.css('div.listing_commerce a');
         for url in url_list[:1]: # [:]
             self.attraction += 1

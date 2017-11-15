@@ -21,10 +21,11 @@ class FanPictureSpiderPipeline(object):
 
 class UploadPicturePipeline(object):
 
-    def __init__(self, access_key, secret_key, bucket_domain):
+    def __init__(self, access_key, secret_key, bucket_domain, bucket_name):
         self.access_key = access_key
         self.secret_key = secret_key
         self.bucket_domain = bucket_domain
+        self.bucket_name = bucket_name
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -32,12 +33,12 @@ class UploadPicturePipeline(object):
             access_key = crawler.settings.get('QINIU_ACCESS_KEY'),
             secret_key = crawler.settings.get('QINIU_SECRET_KEY'),
             bucket_domain = crawler.settings.get('BUCKET_DOMAIN'),
+            bucket_name = crawler.settings.get('BUCKET_NAME'),
         )
 
     def open_spider(self, spider):
         q = Auth(self.access_key, self.secret_key)
         self.bucket = BucketManager(q)
-        self.bucket_name = 'static'
 
     def close_spider(self, spider):
         pass
@@ -57,7 +58,7 @@ class UploadPicturePipeline(object):
             ret, info = self.bucket.fetch(url, self.bucket_name, key)
         except Exception as e:
             spider.logger.info('[图片上传失败]，链接：{}，异常：{}'.format(
-                                url, e))
+                                url, repr(e)))
         else:
             if key == ret['key']:
                 item['updated_pic_url'] = ret['key']
@@ -65,7 +66,7 @@ class UploadPicturePipeline(object):
             image_info = requests.get(self.bucket_domain + key, 'imageInfo').json()
         except Exception as e:
             spider.logger.info('[图片尺寸获取失败]，链接：{}，异常：{}'
-                            .format(key, e))
+                            .format(key, repr(e)))
         else:
             item['pic_width'] = image_info.get('width')
             item['pic_height'] = image_info.get('height')
