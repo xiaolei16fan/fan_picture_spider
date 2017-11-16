@@ -78,6 +78,7 @@ class JavaScriptMiddleware(object):
 
         global driver
         driver.get(request.url)
+        sleep(2)
 
         try:
             click_element = '//div[@class="entry_cta_wrap"]'

@@ -7,8 +7,9 @@ from selenium import webdriver
 from scrapy.http import TextResponse
 from scrapy.loader import ItemLoader
 from fan_picture_spider.items import AttractionItem
+from scrapy_redis.spiders import RedisSpider
 
-class Attraction(scrapy.Spider):
+class Attraction(RedisSpider):
     name = 'attraction'
     attraction = 0
 
