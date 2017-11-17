@@ -87,8 +87,9 @@ class JavaScriptMiddleware(object):
         except:
             spider.logger.info('cannot open the click element refere page. url: {}'
                                 .format(request.url))
-
-        body = driver.page_source
+            body = None
+        else:
+            body = driver.page_source
        
         return HtmlResponse(driver.current_url, body=body, encoding='utf-8',
                             request=request)

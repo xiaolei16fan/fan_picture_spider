@@ -9,11 +9,13 @@ from qiniu import Auth
 from qiniu import BucketManager
 from scrapy import signals
 from scrapy.exporters import CsvItemExporter
+from scrapy.exceptions import DropItem
 
 import uuid
 import json
 import requests
 import time
+import redis
 
 class FanPictureSpiderPipeline(object):
     def process_item(self, item, spider):
@@ -21,11 +23,11 @@ class FanPictureSpiderPipeline(object):
 
 class UploadPicturePipeline(object):
 
-    def __init__(self, access_key, secret_key, bucket_domain, bucket_name):
-        self.access_key = access_key
-        self.secret_key = secret_key
-        self.bucket_domain = bucket_domain
-        self.bucket_name = bucket_name
+    def __init__(self, **config):
+        self.access_key = config.get('access_key')
+        self.secret_key = config.get('secret_key')
+        self.bucket_domain = config.get('bucket_domain')
+        self.bucket_name = config.get('bucket_name')
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -95,3 +97,26 @@ class CsvItemExporterPipline(object):
     def process_item(self, item, spider):
         self.exporter.export_item(item)
         return item
+
+class DupelicatePicUrlPipline(object):
+
+    def __init__(self, **config):
+        self.redis_host = config.get('redis_host', 'localhost')
+        self.redis_port = config.get('redis_port', 6379)
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            redis_host = crawler.settings.get('REDIS_HOST'),
+            redis_port = crawler.settings.get('REDIS_PORT'),
+        )
+
+    def open_spider(self, spider):
+        self.r = redis.StrictRedis(self.redis_host, self.redis_port, db=0)
+
+    def process_item(self, item, spider):
+        key = 'picture_url:'
+        if 0 == self.r.sadd(key, item['pic_url'][0]): # 说明重复
+            raise DropItem('Item dupelicated in set {}: {}'.format(key, item))
+        else:
+            return item
